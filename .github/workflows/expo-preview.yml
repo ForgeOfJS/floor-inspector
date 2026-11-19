@@ -59,7 +59,7 @@ jobs:
       github.event.pull_request.draft == false && github.actor != 'dependabot[bot]')
     needs: export
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     environment:
       name: ${{ github.event_name == 'release' && 'expo-production' || 'expo-preview' }}
       url: ${{ steps.result.outputs.url }}
@@ -160,15 +160,15 @@ jobs:
           ./node_modules/.bin/eas deploy:alias --prod --id "$DEPLOYMENT_ID" --json > production.json
           url=$(jq -er '.production.url | select(test("^https://[a-z0-9-]+\\.expo\\.app/?$"))' production.json)
 
-          # The previous release can still be cached while the alias propagates.
-          for attempt in {1..12}; do
-            if curl --fail --silent --show-error --max-time 10 \
+          # A new production alias can return 404 while it propagates.
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error --max-time 5 \
               "${url%/}/preview-revision.json?revision=$GITHUB_SHA&attempt=$attempt" |
               jq -e --arg revision "$GITHUB_SHA" '.revision == $revision' > /dev/null; then
               printf 'url=%s\n' "$url" >> "$GITHUB_OUTPUT"
               exit 0
             fi
-            sleep 5
+            if [[ "$attempt" != 30 ]]; then sleep 10; fi
           done
           echo "::error::The production URL did not serve revision $GITHUB_SHA after promotion."
           exit 1
