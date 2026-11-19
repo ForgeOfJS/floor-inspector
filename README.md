@@ -42,8 +42,8 @@ pnpm build:web
 pnpm synth
 ```
 
-The web build writes to `apps/client/dist` and expects an SPA fallback to
-`index.html` when served as static files. Synthesis writes to `infra/cdk.out`
+The web build writes static pages to `apps/client/dist`, including one page
+per synthetic report so shared report links can open directly. Synthesis writes to `infra/cdk.out`
 without an AWS account or credentials.
 
 ## Pre-commit hook and pull requests
@@ -51,6 +51,31 @@ without an AWS account or credentials.
 Run `git config --local core.hooksPath .githooks` once per clone to enable the
 pre-commit hook. It runs `pnpm test` and blocks the commit if the tests fail.
 GitHub Actions runs the same suite as the **Unit tests** check on pull requests.
+
+## Expo web previews on pull requests
+
+The **Expo web preview** workflow exports the PR merge revision. For ready PRs
+from branches in this repository, it deploys the static build to Expo Hosting,
+checks the public URL against the exported revision, and opens the app in
+Chromium at desktop and phone widths. It verifies that a report opens from the
+list and reloads directly at its URL. After those checks pass, use **View
+deployment** on the PR or the link in the workflow summary. Each successful run
+has its own HTTPS URL that opens in a browser, including on phones.
+
+One-time owner setup:
+
+1. Use an Expo project with slug `floor-inspector` and choose its preview
+   subdomain in the project's Hosting dashboard. See the
+   [Expo Hosting setup guide](https://docs.expo.dev/eas/hosting/get-started/).
+2. In GitHub **Settings → Environments**, create `expo-preview`. Set the
+   environment variable `EXPO_PROJECT_ID` to the Expo project UUID and the
+   environment secret `EXPO_TOKEN` to a token with access to that project.
+3. With owner approval for Expo Hosting and its usage, open or update a
+   same-repository PR. Inspect **Deploy and verify preview** for the result.
+
+Draft, fork, and Dependabot PRs can still build the web export. The deployment
+job uses only the exported static files and keeps the token out of the build.
+Preview URLs are public and serve the synthetic demo data.
 
 ## Architecture
 

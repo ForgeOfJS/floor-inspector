@@ -21,6 +21,11 @@ const pendingMessages = {
   COMPLETED: "This report has no boss attempts.",
 };
 
+export async function generateStaticParams() {
+  const reports = await guildData.reports();
+  return reports.map(({ id }) => ({ id }));
+}
+
 export default function Report() {
   const { id } = useLocalSearchParams<{ id: string }>();
   return <ReportDetails key={id} id={id} />;

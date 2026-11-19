@@ -1,0 +1,140 @@
+name: Expo web preview
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: expo-preview-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  export:
+    name: Export Expo web app
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      EXPO_OFFLINE: "1"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:web
+      - name: Record the revision in the static export
+        run: |
+          test -s apps/client/dist/index.html
+          test ! -e apps/client/dist/server
+          jq -n --arg revision "$GITHUB_SHA" '{revision: $revision}' > apps/client/dist/preview-revision.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: expo-web-preview
+          path: apps/client/dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy:
+    name: Deploy and verify preview
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.draft == false && github.actor != 'dependabot[bot]'
+    needs: export
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: expo-preview
+      url: ${{ steps.verify.outputs.url }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Prepare isolated Expo project
+        working-directory: ${{ runner.temp }}
+        env:
+          EXPO_PROJECT_ID: ${{ vars.EXPO_PROJECT_ID }}
+        run: |
+          if [[ ! "$EXPO_PROJECT_ID" =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ ]]; then
+            echo "::error::Set EXPO_PROJECT_ID to the Expo project UUID in the expo-preview environment."
+            exit 1
+          fi
+          mkdir expo-preview
+          cd expo-preview
+          git init --quiet
+          printf '%s\n' '{"name":"floor-inspector-preview","private":true}' > package.json
+          jq -n --arg projectId "$EXPO_PROJECT_ID" \
+            '{expo: {name: "Floor Inspector", slug: "floor-inspector", web: {output: "static"}, extra: {eas: {projectId: $projectId}}}}' > app.json
+          npm install --no-audit --no-fund --ignore-scripts eas-cli@27.10.0 playwright@1.65.1
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - uses: actions/download-artifact@v4
+        with:
+          name: expo-web-preview
+          path: ${{ runner.temp }}/expo-preview/dist
+      - name: Publish static export to Expo Hosting
+        id: publish
+        working-directory: ${{ runner.temp }}/expo-preview
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [[ -z "$EXPO_TOKEN" ]]; then
+            echo "::error::Set the EXPO_TOKEN secret in the expo-preview environment."
+            exit 1
+          fi
+          test -s dist/index.html
+          test ! -e dist/server
+          ./node_modules/.bin/eas deploy --json --no-source-maps > deployment.json
+          url=$(jq -er '.url | select(test("^https://[a-z0-9-]+\\.expo\\.app$"))' deployment.json)
+          printf 'url=%s\n' "$url" >> "$GITHUB_OUTPUT"
+      - name: Verify the deployed revision and browser routes
+        id: verify
+        working-directory: ${{ runner.temp }}/expo-preview
+        env:
+          PREVIEW_URL: ${{ steps.publish.outputs.url }}
+        run: |
+          curl --fail --silent --show-error --retry 8 --retry-all-errors \
+            --retry-max-time 90 --max-time 15 "$PREVIEW_URL/preview-revision.json" |
+            jq -e --arg revision "$GITHUB_SHA" '.revision == $revision' > /dev/null
+
+          node --input-type=module <<'JS'
+          import assert from "node:assert/strict";
+          import { chromium } from "playwright";
+
+          const browser = await chromium.launch();
+          const origin = process.env.PREVIEW_URL;
+          const reportPath = "/reports/941ddaad-7ed2-4d82-81ba-000000000014";
+          try {
+            for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+              const page = await browser.newPage({ viewport });
+              const errors = [];
+              page.on("pageerror", (error) => errors.push(error.message));
+
+              const response = await page.goto(origin);
+              assert.equal(response?.status(), 200, `Overview HTTP status at ${viewport.width}px`);
+              await page.getByRole("heading", { name: "Guild overview" }).waitFor();
+              await page.getByRole("link", { name: "Reports", exact: true }).click();
+              await page.getByRole("heading", { name: "Raid reports" }).waitFor();
+              await page.getByRole("link", { name: "Thursday progression", exact: true }).click();
+              await page.waitForURL(new URL(reportPath, origin).href);
+              await page.getByRole("heading", { name: "Boss attempts" }).waitFor();
+
+              const report = await page.reload();
+              assert.equal(report?.status(), 200, `Report deep-link HTTP status at ${viewport.width}px`);
+              await page.getByRole("heading", { name: "Boss attempts" }).waitFor();
+              assert.deepEqual(errors, [], `Browser errors at ${viewport.width}px`);
+              await page.close();
+            }
+          } finally {
+            await browser.close();
+          }
+          JS
+
+          printf 'url=%s\n' "$PREVIEW_URL" >> "$GITHUB_OUTPUT"
+          printf '### Expo web preview\n\n[Open verified preview](%s)\n\nVerified revision `%s` at desktop and mobile widths.\n' \
+            "$PREVIEW_URL" "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
