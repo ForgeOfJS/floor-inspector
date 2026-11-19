@@ -54,7 +54,7 @@ GitHub Actions runs the same suite as the **Unit tests** check on pull requests.
 
 ## Expo web previews on pull requests
 
-The **Expo web preview** workflow exports the PR merge revision. For ready PRs
+The **Expo web hosting** workflow exports the PR merge revision. For ready PRs
 from branches in this repository, it deploys the static build to Expo Hosting,
 checks the public URL against the exported revision, and opens the app in
 Chromium at desktop and phone widths. It verifies that a report opens from the
@@ -76,6 +76,23 @@ One-time owner setup:
 Draft, fork, and Dependabot PRs can still build the web export. The deployment
 job uses only the exported static files and keeps the token out of the build.
 Preview URLs are public and serve the synthetic demo data.
+
+## Publish the public demo from a GitHub Release
+
+Create a GitHub environment named `expo-production` and add
+`EXPO_PROJECT_ID` and `EXPO_TOKEN` for the same Expo Hosting project. Keep
+the token in the environment's secrets. The owner should approve production
+deployment before publishing the release.
+
+After this workflow is merged, publish a stable GitHub Release with a tag on
+`main` that includes the workflow, such as `v1.0.0`. The workflow builds that
+tag, verifies the staged deployment at desktop and phone widths, promotes that
+exact deployment, and checks the revision served by the production URL.
+Prereleases skip production. The workflow summary links to the verified
+`https://<your-subdomain>.expo.app` URL, which stays the same across releases.
+
+To restore an earlier build, promote its deployment from the Expo Hosting
+dashboard. See [Expo production aliases](https://docs.expo.dev/eas/hosting/deployments-and-aliases/).
 
 ## Architecture
 
