@@ -54,8 +54,13 @@ GitHub Actions runs the same suite as the **Unit tests** check on pull requests.
 
 ## Expo web previews on pull requests
 
-The **Expo web hosting** workflow exports the PR merge revision. For ready PRs
-from branches in this repository, it deploys the static build to Expo Hosting,
+CI builds the web app when a PR changes files outside the known documentation
+and CI workflow paths, regardless of the source branch. It also builds when
+the diff is unavailable and on every merge queue run.
+
+The **Expo web hosting** workflow applies the same changed-file check to
+previews. For eligible, ready PRs from branches in this repository, it deploys
+the static build to Expo Hosting,
 checks the public URL against the exported revision, and opens the app in
 Chromium at desktop and phone widths. It verifies that a report opens from the
 list and reloads directly at its URL. After those checks pass, use **View
@@ -71,10 +76,12 @@ One-time owner setup:
    environment variable `EXPO_PROJECT_ID` to the Expo project UUID and the
    environment secret `EXPO_TOKEN` to a token with access to that project.
 3. With owner approval for Expo Hosting and its usage, open or update a
-   same-repository PR. Inspect **Deploy and verify preview** for the result.
+   same-repository PR that changes web build inputs. Inspect **Deploy and
+   verify preview** for the result.
 
-Draft, fork, and Dependabot PRs can still build the web export. The deployment
-job uses only the exported static files and keeps the token out of the build.
+Draft, fork, and Dependabot PRs that change web build inputs can still build the
+web export. The deployment job uses only the exported static files and keeps
+the token out of the build.
 Preview URLs are public and serve the synthetic demo data.
 
 ## Publish the public demo from a GitHub Release
