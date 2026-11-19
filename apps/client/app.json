@@ -5,6 +5,6 @@
     "scheme": "floor-inspector",
     "userInterfaceStyle": "dark",
     "plugins": ["expo-router"],
-    "web": { "bundler": "metro", "output": "single" }
+    "web": { "bundler": "metro", "output": "static" }
   }
 }
