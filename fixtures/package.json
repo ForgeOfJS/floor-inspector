@@ -1,0 +1,10 @@
+{
+  "name": "@pullboard/fixtures",
+  "private": true,
+  "type": "module",
+  "exports": "./index.ts",
+  "dependencies": {
+    "@pullboard/domain": "workspace:*",
+    "zod": "^4.1.0"
+  }
+}

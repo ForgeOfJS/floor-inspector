@@ -1,0 +1,30 @@
+{
+  "name": "pullboard",
+  "private": true,
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "pnpm --filter @pullboard/client start",
+    "web": "pnpm --filter @pullboard/client web",
+    "ios": "pnpm --filter @pullboard/client ios",
+    "android": "pnpm --filter @pullboard/client android",
+    "build:web": "pnpm --filter @pullboard/client build:web",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p tsconfig.json && pnpm --filter @pullboard/client typecheck && pnpm --filter @pullboard/infra typecheck",
+    "test": "vitest run",
+    "synth": "pnpm --filter @pullboard/infra synth"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^10.0.0",
+    "prettier": "^3.6.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vitest": "^4.0.0"
+  }
+}

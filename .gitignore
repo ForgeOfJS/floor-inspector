@@ -1,0 +1,8 @@
+node_modules/
+.expo/
+dist/
+cdk.out/
+coverage/
+.env
+.env.*
+!.env.example

@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Pullboard",
+    "slug": "pullboard",
+    "scheme": "pullboard",
+    "userInterfaceStyle": "dark",
+    "plugins": ["expo-router"],
+    "web": { "bundler": "metro", "output": "single" }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@pullboard/infra",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "synth": "cdk synth --no-lookups --no-notices --no-version-reporting"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.230.0",
+    "constructs": "^10.4.0"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.1100.0",
+    "tsx": "^4.20.0"
+  }
+}

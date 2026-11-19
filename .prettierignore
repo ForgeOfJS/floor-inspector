@@ -1,0 +1,5 @@
+pnpm-lock.yaml
+PULLBOARD_CODEX_START.md
+**/dist/
+**/cdk.out/
+**/.expo/

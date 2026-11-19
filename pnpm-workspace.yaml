@@ -1,0 +1,9 @@
+packages:
+  - apps/*
+  - packages/*
+  - fixtures
+  - services/*
+  - infra
+nodeLinker: hoisted
+ignoredBuiltDependencies:
+  - esbuild
