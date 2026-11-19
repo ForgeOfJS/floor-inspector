@@ -1,5 +1,5 @@
 {
-  "name": "@pullboard/infra",
+  "name": "@floor-inspector/infra",
   "private": true,
   "scripts": {
     "typecheck": "tsc --noEmit",

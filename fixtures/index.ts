@@ -4,7 +4,7 @@ import {
   bossAttemptSchema,
   guildSchema,
   reportImportSchema,
-} from "@pullboard/domain";
+} from "@floor-inspector/domain";
 
 function demoId(sequence: number) {
   return `941ddaad-7ed2-4d82-81ba-${String(sequence).padStart(12, "0")}`;

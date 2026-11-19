@@ -1,8 +1,8 @@
-# Pullboard
+# Floor Inspector
 
-Pullboard helps a World of Warcraft raid team review raid nights and coordinate
-follow-up. The local demo uses synthetic guilds, players, reports, and pull
-statistics. The checkout may still be named `floor-inspector`.
+Floor Inspector helps a World of Warcraft raid team review raid nights and
+coordinate follow-up. The local demo uses synthetic guilds, players, reports,
+and pull statistics.
 
 ## Run locally
 

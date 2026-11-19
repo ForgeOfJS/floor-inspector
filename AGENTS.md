@@ -1,4 +1,4 @@
-# Pullboard agent instructions
+# Floor Inspector agent instructions
 
 Read [architecture](docs/architecture.md), [data model](docs/data-model.md), and
 [API contract](docs/api-contract.md) before changing their respective boundaries.

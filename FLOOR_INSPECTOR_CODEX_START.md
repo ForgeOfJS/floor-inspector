@@ -1,10 +1,10 @@
-# Pullboard — Codex Project Kickoff
+# Floor Inspector — Codex Project Kickoff
 
 > **Instructions to Codex:** You are the lead implementation agent for a new repository. **Begin implementing the foundation now**, rather than only producing a plan. Make reasonable choices within the constraints below, document them, and ask for approval only before actions involving cloud spend, destructive operations, credential changes, or major architecture deviations. The human owner is the technical lead and final reviewer.
 
 ## 1. Product vision
 
-Build **Pullboard**, a cross-platform **World of Warcraft raid progression and guild collaboration app**. It helps a raid team turn combat reports into a repeatable improvement workflow: import a raid log, review boss attempts, annotate key moments, assign next-session priorities, and track progression across raid nights.
+Build **Floor Inspector**, a cross-platform **World of Warcraft raid progression and guild collaboration app**. It helps a raid team turn combat reports into a repeatable improvement workflow: import a raid log, review boss attempts, annotate key moments, assign next-session priorities, and track progression across raid nights.
 
 This is primarily a **full-stack engineering project with a small, meaningful ML component**, *not* an AI chatbot, an AI wrapper, a raid simulator, or a research-only ML project. The application must be useful **before** ML exists.
 
@@ -13,7 +13,7 @@ This is primarily a **full-stack engineering project with a small, meaningful ML
 - **Raider:** sees raid history, upcoming priorities, their assignments, and shared notes.
 
 ### Important product boundary
-Warcraft Logs already provides rich combat analysis. Do **not** try to reproduce every chart or mechanic detection feature. Pullboard's differentiator is the persistent **team workflow** connecting preparation, raid performance, collaboration, and follow-up.
+Warcraft Logs already provides rich combat analysis. Do **not** try to reproduce every chart or mechanic detection feature. Floor Inspector's differentiator is the persistent **team workflow** connecting preparation, raid performance, collaboration, and follow-up.
 
 ## 2. Architecture and nonnegotiable stack
 
@@ -66,7 +66,7 @@ Show a group of similar attempts and *observable* common features, with user fee
 ## 5. Repository layout
 
 ```text
-pullboard/
+floor-inspector/
 ├── AGENTS.md                    # Repo-wide agent instructions
 ├── README.md                    # Setup, architecture overview, commands
 ├── docs/

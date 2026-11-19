@@ -7,8 +7,9 @@ import {
 import { Queue, QueueEncryption } from "aws-cdk-lib/aws-sqs";
 
 const app = new App({ analyticsReporting: false });
-const stack = new Stack(app, "PullboardFoundation", {
-  description: "Pullboard foundation — archive and import queue boundaries",
+const stack = new Stack(app, "FloorInspectorFoundation", {
+  description:
+    "Floor Inspector foundation — archive and import queue boundaries",
 });
 
 new Bucket(stack, "ReportArchive", {

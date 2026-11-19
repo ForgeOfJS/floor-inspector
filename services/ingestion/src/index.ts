@@ -1,5 +1,5 @@
-import { normalizeReportCode, type BossAttempt } from "@pullboard/domain";
-import { demoAttempts, demoReports } from "@pullboard/fixtures";
+import { normalizeReportCode, type BossAttempt } from "@floor-inspector/domain";
+import { demoAttempts, demoReports } from "@floor-inspector/fixtures";
 
 export interface WarcraftLogsProvider {
   getReport(

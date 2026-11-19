@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Pullboard",
-    "slug": "pullboard",
-    "scheme": "pullboard",
+    "name": "Floor Inspector",
+    "slug": "floor-inspector",
+    "scheme": "floor-inspector",
     "userInterfaceStyle": "dark",
     "plugins": ["expo-router"],
     "web": { "bundler": "metro", "output": "single" }

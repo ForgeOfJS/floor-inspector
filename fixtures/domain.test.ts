@@ -7,7 +7,7 @@ import {
   normalizeReportCode,
   reportImportSchema,
   roleSchema,
-} from "@pullboard/domain";
+} from "@floor-inspector/domain";
 
 describe("report identifiers", () => {
   it.each([

@@ -1,22 +1,22 @@
 {
-  "name": "pullboard",
+  "name": "floor-inspector",
   "private": true,
   "packageManager": "pnpm@10.32.1",
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
-    "start": "pnpm --filter @pullboard/client start",
-    "web": "pnpm --filter @pullboard/client web",
-    "ios": "pnpm --filter @pullboard/client ios",
-    "android": "pnpm --filter @pullboard/client android",
-    "build:web": "pnpm --filter @pullboard/client build:web",
+    "start": "pnpm --filter @floor-inspector/client start",
+    "web": "pnpm --filter @floor-inspector/client web",
+    "ios": "pnpm --filter @floor-inspector/client ios",
+    "android": "pnpm --filter @floor-inspector/client android",
+    "build:web": "pnpm --filter @floor-inspector/client build:web",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit -p tsconfig.json && pnpm --filter @pullboard/client typecheck && pnpm --filter @pullboard/infra typecheck",
+    "typecheck": "tsc --noEmit -p tsconfig.json && pnpm --filter @floor-inspector/client typecheck && pnpm --filter @floor-inspector/infra typecheck",
     "test": "vitest run",
-    "synth": "pnpm --filter @pullboard/infra synth"
+    "synth": "pnpm --filter @floor-inspector/infra synth"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.0",
