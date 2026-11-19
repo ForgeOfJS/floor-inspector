@@ -46,6 +46,12 @@ The web build writes to `apps/client/dist` and expects an SPA fallback to
 `index.html` when served as static files. Synthesis writes to `infra/cdk.out`
 without an AWS account or credentials.
 
+## Pre-commit hook and pull requests
+
+Run `git config --local core.hooksPath .githooks` once per clone to enable the
+pre-commit hook. It runs `pnpm test` and blocks the commit if the tests fail.
+GitHub Actions runs the same suite as the **Unit tests** check on pull requests.
+
 ## Architecture
 
 The Expo Router client reads data through the asynchronous interface in

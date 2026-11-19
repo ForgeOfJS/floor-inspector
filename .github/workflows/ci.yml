@@ -1,12 +1,25 @@
 name: CI
 on:
-  push:
   pull_request:
+  merge_group:
 
 permissions:
   contents: read
 
 jobs:
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+
   checks:
     runs-on: ubuntu-latest
     env:
@@ -22,6 +35,5 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm test
       - run: pnpm build:web
       - run: pnpm synth
