@@ -38,10 +38,10 @@ importers:
       '@expo/metro-runtime':
         specifier: ~58.0.17
         version: 58.0.17(@expo/log-box@58.0.15)(expo@58.0.26)(react-dom@19.3.0(react@19.3.0))(react-native@0.88.1(@babel/core@7.29.13)(@react-native/metro-config@0.88.1(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)
-      '@pullboard/domain':
+      '@floor-inspector/domain':
         specifier: workspace:*
         version: link:../../packages/domain
-      '@pullboard/fixtures':
+      '@floor-inspector/fixtures':
         specifier: workspace:*
         version: link:../../fixtures
       expo:
@@ -96,7 +96,7 @@ importers:
 
   fixtures:
     dependencies:
-      '@pullboard/domain':
+      '@floor-inspector/domain':
         specifier: workspace:*
         version: link:../packages/domain
       zod:
@@ -127,10 +127,10 @@ importers:
 
   services/ingestion:
     dependencies:
-      '@pullboard/domain':
+      '@floor-inspector/domain':
         specifier: workspace:*
         version: link:../../packages/domain
-      '@pullboard/fixtures':
+      '@floor-inspector/fixtures':
         specifier: workspace:*
         version: link:../../fixtures
 

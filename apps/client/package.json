@@ -1,5 +1,5 @@
 {
-  "name": "@pullboard/client",
+  "name": "@floor-inspector/client",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -13,8 +13,8 @@
   "dependencies": {
     "@expo/dom-webview": "~58.0.2",
     "@expo/metro-runtime": "~58.0.17",
-    "@pullboard/domain": "workspace:*",
-    "@pullboard/fixtures": "workspace:*",
+    "@floor-inspector/domain": "workspace:*",
+    "@floor-inspector/fixtures": "workspace:*",
     "expo": "58.0.26",
     "expo-constants": "~58.0.16",
     "expo-linking": "~58.0.17",

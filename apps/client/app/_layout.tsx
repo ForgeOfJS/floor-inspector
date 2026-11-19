@@ -20,7 +20,7 @@ export default function Layout() {
         <StatusBar style="light" />
         <View style={[layout.navigation, wide && layout.sidebar]}>
           <View style={layout.brandRow}>
-            <Text style={layout.brand}>Pullboard</Text>
+            <Text style={layout.brand}>Floor Inspector</Text>
             <Text style={layout.demo}>Synthetic demo</Text>
           </View>
           <View style={[layout.links, wide && layout.verticalLinks]}>

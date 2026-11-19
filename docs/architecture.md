@@ -15,6 +15,11 @@ dead-letter queue. No workload principals or permissions are provisioned. These
 constructs define the storage and delivery boundaries for M2. Deployment
 requires owner approval.
 
+The app uses the `floor-inspector://` deep-link scheme, and local CDK synthesis
+produces the `FloorInspectorFoundation` stack. The rename requires no data or
+infrastructure migration because the demo uses fixtures and the stack has only
+been synthesized locally.
+
 ## Application trust boundaries
 
 In M1, the Expo client will obtain user identity from Cognito. AppSync will

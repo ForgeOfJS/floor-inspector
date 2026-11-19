@@ -3,13 +3,13 @@ import type {
   BossAttempt,
   Guild,
   ReportImport,
-} from "@pullboard/domain";
+} from "@floor-inspector/domain";
 import {
   demoAssignments,
   demoAttempts,
   demoGuild,
   demoReports,
-} from "@pullboard/fixtures";
+} from "@floor-inspector/fixtures";
 
 export type RaidReport = { report: ReportImport; attempts: BossAttempt[] };
 

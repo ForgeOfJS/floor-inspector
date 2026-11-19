@@ -1,10 +1,10 @@
 {
-  "name": "@pullboard/ingestion",
+  "name": "@floor-inspector/ingestion",
   "private": true,
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@pullboard/domain": "workspace:*",
-    "@pullboard/fixtures": "workspace:*"
+    "@floor-inspector/domain": "workspace:*",
+    "@floor-inspector/fixtures": "workspace:*"
   }
 }
