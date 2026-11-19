@@ -26,6 +26,11 @@ jobs:
       EXPO_OFFLINE: "1"
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: ${{ github.event_name == 'pull_request' && '2' || '1' }}
+      - name: Check whether the web build is needed
+        id: web
+        run: bash .github/web-build-needed.sh
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
@@ -36,4 +41,5 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build:web
+        if: steps.web.outputs.build == 'true'
       - run: pnpm synth

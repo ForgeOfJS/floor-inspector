@@ -15,16 +15,23 @@ concurrency:
 jobs:
   export:
     name: Export Expo web app
-    if: github.event_name == 'pull_request' || github.event.release.prerelease == false
+    if: >-
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'release' && github.event.release.prerelease == false)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      build: ${{ steps.web.outputs.build }}
     env:
       EXPO_OFFLINE: "1"
     steps:
       - uses: actions/checkout@v5
         with:
           persist-credentials: false
-          fetch-depth: ${{ github.event_name == 'release' && '0' || '1' }}
+          fetch-depth: ${{ github.event_name == 'release' && '0' || '2' }}
+      - name: Check whether the web build is needed
+        id: web
+        run: bash .github/web-build-needed.sh
       - name: Verify the release commit is on main
         if: github.event_name == 'release'
         run: |
@@ -33,18 +40,24 @@ jobs:
             exit 1
           fi
       - uses: pnpm/action-setup@v4
+        if: steps.web.outputs.build == 'true'
       - uses: actions/setup-node@v5
+        if: steps.web.outputs.build == 'true'
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+        if: steps.web.outputs.build == 'true'
       - run: pnpm build:web
+        if: steps.web.outputs.build == 'true'
       - name: Record the revision in the static export
+        if: steps.web.outputs.build == 'true'
         run: |
           test -s apps/client/dist/index.html
           test ! -e apps/client/dist/server
           jq -n --arg revision "$GITHUB_SHA" '{revision: $revision}' > apps/client/dist/preview-revision.json
       - uses: actions/upload-artifact@v4
+        if: steps.web.outputs.build == 'true'
         with:
           name: expo-web-preview
           path: apps/client/dist/
@@ -54,9 +67,10 @@ jobs:
   deploy:
     name: ${{ github.event_name == 'release' && 'Deploy and verify production' || 'Deploy and verify preview' }}
     if: >-
-      github.event_name == 'release' ||
+      needs.export.outputs.build == 'true' &&
+      (github.event_name == 'release' ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.draft == false && github.actor != 'dependabot[bot]')
+      github.event.pull_request.draft == false && github.actor != 'dependabot[bot]'))
     needs: export
     runs-on: ubuntu-latest
     timeout-minutes: 20
